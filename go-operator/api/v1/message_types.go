@@ -2,7 +2,6 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // MessageSpec defines the desired state of Message
@@ -37,33 +36,6 @@ type Message struct {
 	Status MessageStatus `json:"status,omitempty"`
 }
 
-// DeepCopyObject returns a deep copy of the Message as a runtime.Object
-func (m *Message) DeepCopyObject() runtime.Object {
-	if c := m.DeepCopy(); c != nil {
-		return c
-	}
-	return nil
-}
-
-// DeepCopy returns a deep copy of the Message
-func (m *Message) DeepCopy() *Message {
-	if m == nil {
-		return nil
-	}
-	out := new(Message)
-	m.DeepCopyInto(out)
-	return out
-}
-
-// DeepCopyInto copies all properties of this object into another object of the same type
-func (m *Message) DeepCopyInto(out *Message) {
-	*out = *m
-	out.TypeMeta = m.TypeMeta
-	m.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
-	out.Spec = m.Spec
-	out.Status = m.Status
-}
-
 //+kubebuilder:object:root=true
 
 // MessageList contains a list of Message
@@ -71,38 +43,6 @@ type MessageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Message `json:"items"`
-}
-
-// DeepCopyObject returns a deep copy of the MessageList as a runtime.Object
-func (ml *MessageList) DeepCopyObject() runtime.Object {
-	if c := ml.DeepCopy(); c != nil {
-		return c
-	}
-	return nil
-}
-
-// DeepCopy returns a deep copy of the MessageList
-func (ml *MessageList) DeepCopy() *MessageList {
-	if ml == nil {
-		return nil
-	}
-	out := new(MessageList)
-	ml.DeepCopyInto(out)
-	return out
-}
-
-// DeepCopyInto copies all properties of this object into another object of the same type
-func (ml *MessageList) DeepCopyInto(out *MessageList) {
-	*out = *ml
-	out.TypeMeta = ml.TypeMeta
-	ml.ListMeta.DeepCopyInto(&out.ListMeta)
-	if ml.Items != nil {
-		in, out := &ml.Items, &out.Items
-		*out = make([]Message, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
-	}
 }
 
 func init() {

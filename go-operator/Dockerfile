@@ -1,7 +1,10 @@
 # Build stage
-FROM golang:1.19 AS builder
+FROM golang:1.19-alpine AS builder
 
 WORKDIR /workspace
+
+# Install git (needed for go mod download)
+RUN apk add --no-cache git
 
 # Copy the Go Modules manifests
 COPY go.mod go.mod
