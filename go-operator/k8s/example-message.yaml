@@ -1,0 +1,6 @@
+apiVersion: myorg.dev/v1
+kind: Message
+metadata:
+  name: go-hello-msg
+spec:
+  text: "안녕하세요! Go 오퍼레이터가 관리하는 메시지입니다!"
