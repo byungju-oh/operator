@@ -360,21 +360,6 @@ func (r *MessageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
    kopf run main.py --verbose  # Python 오퍼레이터 디버그 모드
    ```
 
-## 🤝 기여하기
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📖 추가 학습 자료
-
-- [Kubernetes Operators 패턴](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
-- [kopf 공식 문서](https://kopf.readthedocs.io/)
-- [kubebuilder 공식 문서](https://book.kubebuilder.io/)
-- [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime)
-
 ## 📄 라이선스
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
