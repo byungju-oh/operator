@@ -43,6 +43,31 @@ spec:
 #### 🎛️ **컨트롤러 (Controller)**
 실제로 상태를 관리하는 코드입니다.
 
+## 🏗️ 프로젝트 구조
+
+```
+├── python-operator/          # Python + kopf 구현
+│   ├── main.py              # 오퍼레이터 메인 로직
+│   ├── Dockerfile           # 컨테이너 이미지
+│   ├── requirements.txt     # Python 의존성
+│   └── k8s/                 # Kubernetes 매니페스트
+│       ├── crd.yaml
+│       ├── operator-deploy.yaml
+│       └── example-message.yaml
+│
+└── go-operator/             # Go + kubebuilder 구현
+    ├── main.go              # 애플리케이션 진입점
+    ├── Dockerfile           # 컨테이너 이미지
+    ├── Makefile             # 빌드 및 배포 스크립트
+    ├── api/v1/              # CRD 타입 정의
+    ├── controllers/         # 컨트롤러 로직
+    └── k8s/                 # Kubernetes 매니페스트
+        ├── crd.yaml
+        ├── operator-deploy.yaml
+        └── example-message.yaml
+```
+
+
 ## 🏗️ 이 프로젝트에서 배우는 것
 
 ### Python 오퍼레이터 (kopf) - 실제 리소스 관리 학습
@@ -197,47 +222,6 @@ Message 삭제 → 이벤트 발생 → 오퍼레이터 반응 → Pod 정리
 결과: 상태 일치 ✅
 ```
 
-## 🎓 학습 단계
-
-### 초급: 오퍼레이터 사용자
-1. CRD 설치하고 커스텀 리소스 생성해보기
-2. 오퍼레이터 동작 관찰하기
-3. 리소스 수정/삭제하며 반응 확인하기
-
-### 중급: 오퍼레이터 이해
-1. Python 코드에서 이벤트 핸들러 분석
-2. Go 코드에서 Reconcile 로직 이해
-3. 로그를 통한 동작 원리 파악
-
-### 고급: 오퍼레이터 개발
-1. 새로운 필드 추가해보기
-2. 다른 타입의 리소스 관리해보기
-3. 에러 처리 및 재시도 로직 구현
-
-## 🔧 실제 운영 환경 고려사항
-
-### GKE에서의 배포
-```bash
-# Container Registry에 이미지 푸시
-docker build -t gcr.io/[PROJECT-ID]/python-operator:v1.0 python-operator/
-docker push gcr.io/[PROJECT-ID]/python-operator:v1.0
-
-# GKE에 배포
-kubectl apply -f python-operator/k8s/operator-deploy.yaml
-```
-
-### 모니터링과 로깅
-```bash
-# 오퍼레이터 로그 확인
-kubectl logs -f deployment/message-operator
-
-# 이벤트 확인
-kubectl get events --sort-by=.metadata.creationTimestamp
-
-# 메트릭 확인 (Go 오퍼레이터)
-kubectl port-forward deployment/go-message-operator 8080:8080
-curl localhost:8080/metrics
-```
 
 ## 🤔 왜 오퍼레이터를 사용하나요?
 
@@ -254,29 +238,6 @@ curl localhost:8080/metrics
 - ✅ 확장 가능한 관리
 
 
-## 🏗️ 프로젝트 구조
-
-```
-├── python-operator/          # Python + kopf 구현
-│   ├── main.py              # 오퍼레이터 메인 로직
-│   ├── Dockerfile           # 컨테이너 이미지
-│   ├── requirements.txt     # Python 의존성
-│   └── k8s/                 # Kubernetes 매니페스트
-│       ├── crd.yaml
-│       ├── operator-deploy.yaml
-│       └── example-message.yaml
-│
-└── go-operator/             # Go + kubebuilder 구현
-    ├── main.go              # 애플리케이션 진입점
-    ├── Dockerfile           # 컨테이너 이미지
-    ├── Makefile             # 빌드 및 배포 스크립트
-    ├── api/v1/              # CRD 타입 정의
-    ├── controllers/         # 컨트롤러 로직
-    └── k8s/                 # Kubernetes 매니페스트
-        ├── crd.yaml
-        ├── operator-deploy.yaml
-        └── example-message.yaml
-```
 
 ## 🎯 핵심 기능
 
