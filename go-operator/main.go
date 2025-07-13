@@ -10,6 +10,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	myorgv1 "github.com/yourname/go-operator/api/v1"
 	"github.com/yourname/go-operator/controllers"
@@ -38,11 +39,13 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:                  scheme,
-		MetricsBindAddr:         metricsAddr,
-		LeaderElection:          enableLeaderElection,
-		LeaderElectionID:        "message-operator",
-		HealthProbeBindAddress:  probeAddr,
+		Scheme: scheme,
+		Metrics: metricsserver.Options{
+			BindAddress: metricsAddr,
+		},
+		HealthProbeBindAddress: probeAddr,
+		LeaderElection:         enableLeaderElection,
+		LeaderElectionID:       "message-operator",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
