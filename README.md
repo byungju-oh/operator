@@ -66,6 +66,76 @@ spec:
         ├── operator-deploy.yaml
         └── example-message.yaml
 ```
+## 🎯 핵심 기능
+
+### Message CRD (Custom Resource Definition)
+두 오퍼레이터 모두 동일한 `Message` CRD를 사용합니다:
+
+```yaml
+apiVersion: myorg.dev/v1
+kind: Message
+metadata:
+  name: example-message
+spec:
+  text: "안녕하세요! 오퍼레이터 테스트 메시지입니다!"
+```
+
+### 구현별 차이점
+
+| 기능 | Python 오퍼레이터 | Go 오퍼레이터 |
+|------|------------------|---------------|
+| **프레임워크** | kopf | kubebuilder |
+| **주요 동작** | Pod 생성/관리 | 로그 출력/상태 관리 |
+| **이벤트 처리** | 데코레이터 기반 | Reconcile 루프 |
+| **개발 속도** | 빠름 (Python) | 보통 (타입 안정성) |
+| **성능** | 보통 | 높음 (Go) |
+| **학습 목적** | 실제 리소스 관리 | 오퍼레이터 패턴 이해 |
+
+## 🚀 빠른 시작
+
+### 사전 요구사항
+- Kubernetes 클러스터 (minikube, kind, GKE 등)
+- kubectl 설정 완료
+- Docker (컨테이너 이미지 빌드용)
+
+### 1. Python 오퍼레이터 실행
+
+```bash
+cd python-operator
+
+# 로컬 개발 (권장)
+pip install -r requirements.txt
+kubectl apply -f k8s/crd.yaml
+kopf run main.py --standalone
+
+# 또는 클러스터 배포
+kubectl apply -f k8s/
+```
+
+### 2. Go 오퍼레이터 실행
+
+```bash
+cd go-operator
+
+# 로컬 개발 (권장)
+make install  # CRD 설치
+make run      # 로컬 실행
+
+# 또는 클러스터 배포
+make deploy IMG=gcr.io/YOUR_PROJECT_ID/go-operator:latest
+```
+
+### 3. 테스트
+
+```bash
+# Message 리소스 생성
+kubectl apply -f python-operator/k8s/example-message.yaml
+
+# 결과 확인
+kubectl get messages
+kubectl get pods  # Python 오퍼레이터의 경우
+kubectl logs -f deployment/message-operator  # 오퍼레이터 로그
+```
 
 
 ## 🏗️ 이 프로젝트에서 배우는 것
@@ -239,76 +309,6 @@ Message 삭제 → 이벤트 발생 → 오퍼레이터 반응 → Pod 정리
 
 
 
-## 🎯 핵심 기능
-
-### Message CRD (Custom Resource Definition)
-두 오퍼레이터 모두 동일한 `Message` CRD를 사용합니다:
-
-```yaml
-apiVersion: myorg.dev/v1
-kind: Message
-metadata:
-  name: example-message
-spec:
-  text: "안녕하세요! 오퍼레이터 테스트 메시지입니다!"
-```
-
-### 구현별 차이점
-
-| 기능 | Python 오퍼레이터 | Go 오퍼레이터 |
-|------|------------------|---------------|
-| **프레임워크** | kopf | kubebuilder |
-| **주요 동작** | Pod 생성/관리 | 로그 출력/상태 관리 |
-| **이벤트 처리** | 데코레이터 기반 | Reconcile 루프 |
-| **개발 속도** | 빠름 (Python) | 보통 (타입 안정성) |
-| **성능** | 보통 | 높음 (Go) |
-| **학습 목적** | 실제 리소스 관리 | 오퍼레이터 패턴 이해 |
-
-## 🚀 빠른 시작
-
-### 사전 요구사항
-- Kubernetes 클러스터 (minikube, kind, GKE 등)
-- kubectl 설정 완료
-- Docker (컨테이너 이미지 빌드용)
-
-### 1. Python 오퍼레이터 실행
-
-```bash
-cd python-operator
-
-# 로컬 개발 (권장)
-pip install -r requirements.txt
-kubectl apply -f k8s/crd.yaml
-kopf run main.py --standalone
-
-# 또는 클러스터 배포
-kubectl apply -f k8s/
-```
-
-### 2. Go 오퍼레이터 실행
-
-```bash
-cd go-operator
-
-# 로컬 개발 (권장)
-make install  # CRD 설치
-make run      # 로컬 실행
-
-# 또는 클러스터 배포
-make deploy IMG=gcr.io/YOUR_PROJECT_ID/go-operator:latest
-```
-
-### 3. 테스트
-
-```bash
-# Message 리소스 생성
-kubectl apply -f python-operator/k8s/example-message.yaml
-
-# 결과 확인
-kubectl get messages
-kubectl get pods  # Python 오퍼레이터의 경우
-kubectl logs -f deployment/message-operator  # 오퍼레이터 로그
-```
 
 ## 📚 학습 가이드
 
