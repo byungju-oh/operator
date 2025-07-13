@@ -1,4 +1,4 @@
-
+module github.com/yourname/go-operator
 
 go 1.19
 
